@@ -1,0 +1,242 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id        String    @id @default(uuid())
+  username  String    @unique
+  email     String?   @unique
+  name      String
+  password  String?
+  image     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  accounts  Account[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  userId            String   @map("user_id")
+  type              String?
+  provider          String
+  providerAccountId String   @map("provider_account_id")
+  token_type        String?
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  scope             String?
+  id_token          String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Students {
+  id           String    @id @default(cuid())
+  student_no   String    @unique
+  title        String
+  f_name       String
+  l_name       String
+  nickname     String?
+  birthdate    DateTime?
+  adderss_1    String?
+  adderss_2    String?
+  sub_district String?
+  district     String?
+  province     String?
+  phone        String?
+  remark       String?
+
+  classroom_id String?
+  classroom    ClassRoom? @relation(fields: [classroom_id], references: [id])
+
+  trip_id String?
+  trip    Trip?   @relation(fields: [trip_id], references: [id])
+
+  image_id String? @default("")
+  image    Image?  @relation(fields: [image_id], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Order     Order[]
+
+  @@index([classroom_id])
+  @@index([trip_id])
+  @@index([image_id])
+}
+
+model ClassRoom {
+  id   String @id @default(cuid())
+  name String
+
+  teacher_id String?
+  teacher    Teacher? @relation(fields: [teacher_id], references: [id])
+
+  student Students[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([teacher_id])
+}
+
+model Trip {
+  id      String     @id @default(cuid())
+  name    String
+  student Students[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Product Product[]
+}
+
+model Teacher {
+  id         String @id @default(cuid())
+  teacher_no String
+  title      String
+  f_name     String
+  l_name     String
+  nickname   String
+
+  image_id String? @default("")
+  image    Image?  @relation(fields: [image_id], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ClassRoom ClassRoom[]
+  Order     Order[]
+}
+
+model Image {
+  id            String @id @default(uuid())
+  filename      String @db.Text
+  imageThumbUrl String @db.Text
+  imageFullUrl  String @db.Text
+
+  Students Students[]
+  Teacher  Teacher[]
+}
+
+model Product {
+  id         String  @id @default(cuid())
+  product_no String
+  name       String
+  detail     String?
+  price      Decimal
+  unit       String
+
+  category_id String
+  category    Category @relation(fields: [category_id], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stock       Stock[]
+  OrderDetail OrderDetail[]
+}
+
+model Stock {
+  id         String  @id @default(cuid())
+  product_id String
+  product    Product @relation(fields: [product_id], references: [id])
+
+  amount Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([product_id])
+}
+
+model Order {
+  id       String @id @default(cuid())
+  order_no String
+
+  student_id String
+  student    Students @relation(fields: [student_id], references: [id])
+  teacher_id String
+  teacher    Teacher  @relation(fields: [teacher_id], references: [id])
+
+  is_paid        Boolean
+  payment_method String
+  recieve        Decimal
+  return         Decimal
+  pay_date       DateTime?
+  remark         String?
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  OrderDetail OrderDetail[]
+
+  @@index([student_id])
+  @@index([teacher_id])
+}
+
+model OrderDetail {
+  id String @id @default(cuid())
+
+  order_id String
+  order    Order  @relation(fields: [order_id], references: [id])
+
+  product_id String
+  product    Product @relation(fields: [product_id], references: [id])
+
+  amount Decimal
+  price  Decimal
+  unit   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([product_id])
+}
+
+model subdistrict {
+  code          Int    @id
+  zip_code      Int
+  name_th       String
+  name_en       String
+  district_code Int
+}
+
+model district {
+  code          Int    @id
+  name_th       String
+  name_en       String
+  province_code Int
+}
+
+model provinces {
+  code          Int    @id
+  name_th       String
+  name_th_short String
+  name_en       String
+  geography_id  String
+}
