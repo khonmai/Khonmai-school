@@ -70,7 +70,6 @@ const MenuItem = ({
   return (
     <>
       <div
-        key={label}
         onClick={handleMenuClick}
         role="button"
         style={{ paddingLeft: level ? `${level * 18 + 28}px` : "20px" }}
@@ -110,6 +109,7 @@ const MenuItem = ({
           childData.map((menu: any) => {
             return (
               <MenuItem
+                key={menu.label}
                 onClick={() => {
                   router.push(menu.url);
                 }}

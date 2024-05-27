@@ -1,12 +1,12 @@
 "use client";
 
 import React, { ChangeEvent, useEffect, useState } from "react";
-import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
 import axios from "axios";
 import { join } from "path";
+import Image from "next/image";
 
 interface InputFileProps {
   onSelected: (date: File) => void;
@@ -69,7 +69,7 @@ export default function ImageUpload({ onSelected, image }: InputFileProps) {
     <div className="grid max-w-sm items-center gap-1.5 ">
       {selectedFile ? (
         <div className="mt-2 relative group/image flex justify-center ">
-          <img
+          <Image
             src={selectedFile}
             alt="Preview"
             className="h-[160px] w-[160px] object-contain rounded-xl"
@@ -90,7 +90,7 @@ export default function ImageUpload({ onSelected, image }: InputFileProps) {
       ) : (
         <div className="mt-2 relative group/image">
           <Label htmlFor="picture" className=" cursor-pointer">
-            <img
+            <Image
               className="h-[160px] w-[160px] object-contain rounded-xl"
               src={"/images/placeholder.png"}
               alt="Preview"

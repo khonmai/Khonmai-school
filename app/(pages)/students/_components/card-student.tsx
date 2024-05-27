@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Image as ImageType, Students } from "@prisma/client";
 import { join } from "path";
 import { Merge } from "react-hook-form";
+import Image from "next/image";
 
 interface CardStudentProps {
   data: Merge<Students, { image: ImageType | null }> | null;
@@ -23,7 +24,7 @@ function CardStudent({ data }: CardStudentProps) {
 
   return (
     <div className="w-full mx-auto flex flex-row gap-x-2 items-center">
-      <img
+      <Image
         src={selectedFile!}
         alt="Preview"
         className="h-[75px] w-[75px] object-contain rounded-xl p-1 border"

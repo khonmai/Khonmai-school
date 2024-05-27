@@ -36,6 +36,7 @@ function FillterColumn<TData>({
             }, 0);
             return (
               <Input
+                key={column.accessorKey}
                 placeholder={column.footer}
                 value={
                   (table

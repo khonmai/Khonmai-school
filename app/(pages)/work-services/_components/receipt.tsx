@@ -61,9 +61,12 @@ export function Receipt({ schoolData, orderData }: ReceiptProps) {
   };
 
   const getTotal = () => {
-    return orderData?.OrderDetail?.reduce((accumulator, object) => {
-      return accumulator + (object?.amount ?? 0) * (object?.price ?? 0);
-    }, 0);
+    return orderData?.OrderDetail?.reduce(
+      (accumulator: number, object: any) => {
+        return accumulator + (object?.amount ?? 0) * (object?.price ?? 0);
+      },
+      0
+    );
   };
 
   const convertMonth = (m: number) => {
@@ -175,8 +178,8 @@ export function Receipt({ schoolData, orderData }: ReceiptProps) {
               </View>
 
               {orderData?.OrderDetail &&
-                orderData.OrderDetail.map((item, index) => (
-                  <View style={styles.session_row}>
+                orderData.OrderDetail.map((item: any, index: number) => (
+                  <View key={index + 1} style={styles.session_row}>
                     <View style={styles.table_td_no}>
                       <Text>{index + 1}</Text>
                     </View>

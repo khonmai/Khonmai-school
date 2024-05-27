@@ -1,29 +1,12 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import {
-  ChevronLeft,
-  MenuIcon,
-  Gauge,
-  Settings,
-  FolderKanban,
-  Package,
-  School2,
-  User,
-  Users,
-  LogOut,
-  LifeBuoy,
-} from "lucide-react";
+import { ChevronLeft, MenuIcon, LogOut, LifeBuoy } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import Item from "./menu-item";
-import { toast } from "sonner";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { NavigationNavbar } from "./navigation-navbar";
 import { UserItem } from "./user-item";
 import { signOut } from "next-auth/react";
@@ -163,6 +146,7 @@ export const Navigation = () => {
 
                 return (
                   <MenuItem
+                    key={menu.label}
                     onClick={() => {
                       router.push(menu.url);
                     }}

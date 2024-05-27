@@ -40,8 +40,8 @@ function StudentsPage() {
 
       <div className="flex flex-1">
         {students &&
-          students.map((item: {}) => {
-            return <CardStudent data={item} />;
+          students.map((item: any) => {
+            return <CardStudent key={item?.id} data={item} />;
           })}
       </div>
     </div>
