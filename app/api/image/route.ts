@@ -9,11 +9,11 @@ import mime from "mime";
 const pathPublic = "/public";
 const pathProfile = "/images/profiles";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 export async function POST(req: NextRequest) {
   try {
