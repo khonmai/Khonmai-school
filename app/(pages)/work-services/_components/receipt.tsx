@@ -1,5 +1,5 @@
 //@ts-check
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Page,
   Text,
@@ -31,16 +31,15 @@ interface ReceiptProps {
 export function Receipt({ schoolData, orderData }: ReceiptProps) {
   const [printDate, setPrintDate] = useState("");
 
-  setTimeout(() => {
-    console.log(orderData.OrderDetail);
-
+  useEffect(() => {
     const date = new Date();
 
     const print_date = `${date.getDate()} ${convertMonth(date.getMonth())} ${
       date.getFullYear() + 543
     } ${format(date, "HH:mm:ss")}`;
     setPrintDate(print_date);
-  }, 0);
+  }, []);
+
 
   const getOrderDate = (d: Date) => {
     const date = new Date(d);
@@ -217,7 +216,9 @@ export function Receipt({ schoolData, orderData }: ReceiptProps) {
             <View>
               <View style={styles.session_row}>
                 <Text style={{ fontSize: 12 }}>status : </Text>
-                <Text style={{ fontSize: 12 }}>ปกติ</Text>
+                <Text style={{ fontSize: 12 }}>
+                  {orderData.is_paid ? "ปกติ" : "ค้างชำระ"} {orderData.remark}
+                </Text>
               </View>
               <View style={{ ...styles.session_row, marginTop: 12 }}>
                 <Text style={{ fontSize: 12 }}>หมายเหตุ : </Text>

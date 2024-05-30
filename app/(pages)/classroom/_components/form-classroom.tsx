@@ -43,7 +43,6 @@ function FormClassRoom({ initialData }: FormClassRoomProps) {
   const { mutate: classRoomMutate } = useClassRoom();
 
   const [isEdit, setIsEdit] = useState(false);
-  console.log(initialData);
 
   const form = useForm<ClassRoom>({
     resolver: zodResolver(ClassRoomSchema),

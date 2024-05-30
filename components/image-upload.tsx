@@ -22,7 +22,7 @@ export default function ImageUpload({ onSelected, image }: InputFileProps) {
   useEffect(() => {
     if (image) {
       setTimeout(() => {
-        setSelectedFile(join(image.imageFullUrl, image.filename));
+        setSelectedFile(image.imageFullUrl + image.filename);
       }, 0);
     }
   }, []);
@@ -56,7 +56,7 @@ export default function ImageUpload({ onSelected, image }: InputFileProps) {
     formData.append("image", file);
     const res = await axios.post("/api/image", formData);
     setFilename(res.data.filename);
-    setSelectedFile(join(pathProfile, "/", res.data.filename));
+    setSelectedFile(pathProfile + res.data.filename);
   }
 
   async function handleRemoveImate(file_name: string) {
@@ -69,7 +69,7 @@ export default function ImageUpload({ onSelected, image }: InputFileProps) {
     <div className="grid max-w-sm items-center gap-1.5 ">
       {selectedFile ? (
         <div className="mt-2 relative group/image flex justify-center ">
-          <Image
+          <img
             src={selectedFile}
             alt="Preview"
             className="h-[160px] w-[160px] object-contain rounded-xl"
@@ -90,7 +90,7 @@ export default function ImageUpload({ onSelected, image }: InputFileProps) {
       ) : (
         <div className="mt-2 relative group/image">
           <Label htmlFor="picture" className=" cursor-pointer">
-            <Image
+            <img
               className="h-[160px] w-[160px] object-contain rounded-xl"
               src={"/images/placeholder.png"}
               alt="Preview"

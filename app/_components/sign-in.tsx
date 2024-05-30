@@ -45,10 +45,8 @@ const SignInPage = () => {
         password,
         redirect: false,
       });
-      console.log(res);
 
       if (res?.error) {
-        console.log(res);
         toast({
           title: "Error",
           variant: "destructive",
@@ -60,7 +58,6 @@ const SignInPage = () => {
       loginModal.onClose()
       router.replace("dashboard");
     } catch (error) {
-      console.log(error);
     }
   };
 

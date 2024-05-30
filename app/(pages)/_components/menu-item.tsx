@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { ChevronRight, ChevronDown, LucideIcon, LifeBuoy } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ItemProps {
   documentIcon?: string;
@@ -38,14 +38,14 @@ const MenuItem = ({
 
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
 
-  setTimeout(() => {
+  useEffect(() => {
     const _active = child?.find((f: any) => f?.url! == pathname);
     setChildActive(false);
     if (_active) {
       setChildActive(true);
     }
     setChildeHeight(`h-[${child.length * 38}px]`);
-  }, 0);
+  }, []);
 
   const handelExpand = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>

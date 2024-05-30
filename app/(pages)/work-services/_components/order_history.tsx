@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import useOrder from "@/hooks/useOrder";
 import { ColumnDef } from "@tanstack/react-table";
-import { ExternalLink, History } from "lucide-react";
+import { ExternalLink, History, MoreHorizontal } from "lucide-react";
 import { format } from "date-fns";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useState } from "react";
@@ -40,14 +40,14 @@ export function OrderHistory() {
             <SheetTitle>Order History</SheetTitle>
             <SheetDescription></SheetDescription>
           </SheetHeader>
-          <div className="grid">
+          <div className="grid w-[100%] h-[100%] pb-8">
             <ScrollArea>
               <DataTable
                 columns={columns}
                 data={formatedData || []}
                 isPagination={false}
               />
-              <ScrollBar orientation="horizontal" />
+              <ScrollBar orientation="horizontal"  />
             </ScrollArea>
           </div>
         </SheetContent>
@@ -64,10 +64,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const receiptModal = useReceiptModal();
 
   return (
-    <ExternalLink
-      onClick={() => receiptModal.onOpen(data.id)}
-      className="w-4 h-4"
-    />
+    <>
+      <ExternalLink
+        onClick={() => receiptModal.onOpen(data.id)}
+        className="w-4 h-4 cursor-pointer"
+      />
+    </>
   );
 };
 
@@ -75,7 +77,7 @@ type Order = {
   id: string;
   order_no: string;
   name: string;
-  is_paid: boolean;
+  status: boolean;
   datecreate: string;
 };
 
@@ -83,6 +85,9 @@ const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "order_no",
     header: "เลขที่",
+    enableColumnFilter: true,
+    footer: "เลขที่",
+
   },
   {
     accessorKey: "name",
@@ -90,11 +95,13 @@ const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => (
       <div className="w-[180px] truncate">{row.original.name}</div>
     ),
+    enableColumnFilter: true,
+    footer: "ชื่อ - สกุล",
   },
   {
     accessorKey: "status",
     header: "สภานะ",
-    cell: ({ row }) => <PaidStatus status={row.original.is_paid} />,
+    cell: ({ row }) => <PaidStatus status={row.original.status} />,
   },
   {
     accessorKey: "datecreate",

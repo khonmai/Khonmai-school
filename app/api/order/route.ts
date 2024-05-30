@@ -21,7 +21,8 @@ export async function GET(req: NextRequest) {
         OrderDetail: { include: { product: true } },
         student: { include: { classroom: true } },
       },
-  });
+      orderBy: { createdAt: "desc" },
+    });
     return NextResponse.json(order);
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
@@ -32,6 +33,52 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     if (body) {
+      const over_stock = await Promise.all(
+        body.order.map(async (item: any) => {
+          const check_stock = await prismadb.category.findFirst({
+            where: { name: "สินค้า" },
+            include: {
+              Product: {
+                include: {
+                  stock: {
+                    where: {
+                      AND: [
+                        { product_id: item.product.id },
+                        { amount: { lt: item.amount } },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+          // const check_stock1 = await prismadb.stock.findFirst({
+          //   where: {
+          //     AND: [
+          //       { product_id: item.product.id },
+          //       { amount: { lt: item.amount } },
+          //     ],
+          //   },
+          // });
+
+          if (check_stock?.Product[0]?.stock?.length ?? 0 > 0) {
+            const product = await prismadb.product.findUnique({
+              where: { id: item.product.id },
+            });
+
+            return product;
+          }
+          return null;
+        })
+      );
+
+      if (over_stock.filter((f) => f != null).length > 0) {
+        return NextResponse.json(`${over_stock[0]?.name} over stock`, {
+          status: 500,
+        });
+      }
+
       const order_number = await prismadb.order.findFirst({
         orderBy: { createdAt: "desc" },
       });
@@ -66,6 +113,25 @@ export async function POST(req: NextRequest) {
       await prismadb.orderDetail.createMany({
         data: order_detail,
       });
+
+      const update_stock = order_detail.map((data: any) => {
+        return {
+          product_id: data.product_id,
+          amount: data.amount,
+          multiplier: -1,
+        };
+      });
+
+      Promise.all(
+        update_stock.map(async (item: any) => {
+          await prismadb.stock.updateMany({
+            where: {
+              AND: [{ product_id: item.product_id }, { amount: { gt: 0 } }],
+            },
+            data: { amount: { increment: item.amount * item.multiplier } },
+          });
+        })
+      );
 
       return NextResponse.json(order);
     }

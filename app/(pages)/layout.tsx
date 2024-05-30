@@ -8,7 +8,7 @@ const PagesLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   const { data: session, status } = useSession();
-  
+
   if (status === "unauthenticated") {
     router.push("/");
   }
@@ -16,7 +16,9 @@ const PagesLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="h-full flex">
       <Navigation />
-      <main className="flex-1 h-full overflow-y-auto pt-1 ">{children}</main>
+      <main className="flex-1 h-full overflow-y-auto pt-1 ">
+        <div className="px-2">{children}</div>
+      </main>
     </div>
   );
 };

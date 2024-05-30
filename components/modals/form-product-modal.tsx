@@ -8,7 +8,7 @@ import useProducts from "@/hooks/useProducts";
 
 export const FormProductModal = () => {
   const formModal = useFormProductModal();
-  const { data: trips, isLoading, mutate } = useProducts(formModal.id);
+  const { data: product, isLoading, mutate } = useProducts(formModal.id);
   mutate();
 
   return (
@@ -18,7 +18,13 @@ export const FormProductModal = () => {
     >
       <DialogContent className="max-w-[900px] w-[80%] p-0 overflow-hidden">
         <ScrollArea className="max-h-[90vh]">
-          <FormProduct initialData={formModal.id ? trips : null} />
+          <FormProduct
+            initialData={
+              formModal.id
+                ? { ...product, amount: product?.stock[0]?.amount }
+                : null
+            }
+          />
         </ScrollArea>
       </DialogContent>
     </Dialog>

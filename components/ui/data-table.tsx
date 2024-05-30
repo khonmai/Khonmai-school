@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTablePagination } from "@/components/ui/tablepagination";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FillterColumn from "@/components/ui/filltercolumn";
 import { cn } from "@/lib/utils";
 
@@ -29,12 +29,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isPagination?: boolean;
+  perPage?: number;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   isPagination = true,
+  perPage = 20,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -54,10 +56,16 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  useEffect(() => {
+    if (perPage) {
+      table.setPageSize(perPage);
+    }
+  }, [perPage]);
+
   setTimeout(() => {
     if (!isPagination) {
       table.setPageSize(data.length);
-    }
+    } 
   }, 0);
 
   return (

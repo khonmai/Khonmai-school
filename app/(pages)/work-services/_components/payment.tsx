@@ -20,7 +20,7 @@ import React, { useEffect, useState } from "react";
 
 function Payment() {
   const { data: session, status } = useSession();
-  const { order } = useOrderStore();
+  const { order, updateOrder } = useOrderStore();
   const paymentModal = usePaymentModal();
 
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -31,7 +31,7 @@ function Payment() {
 
   const receiptModal = useReceiptModal();
 
-  setTimeout(() => {
+  useEffect(() => {
     if (order) {
       setTotalPayment(
         order.reduce((accumulator, object) => {
@@ -39,7 +39,7 @@ function Payment() {
         }, 0)
       );
     }
-  }, 0);
+  }, []);
 
   const generateQR = (amount = 0) => {
     // @ts-check
@@ -55,12 +55,21 @@ function Payment() {
   };
 
   const handlePayment = async () => {
+    if (paymentMethod === "cash" && recieve < totalPayment) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: `ยอดชำระไม่ครบกำหนด`,
+      });
+      return;
+    }
+
     if (order) {
       let body = {
         order: order,
         student_id: order[0].student?.id ?? 0,
         teacher_id: order[0].teacher?.id ?? "0",
-        is_paid: false,
+        is_paid: paymentMethod !== "unpaid",
         payment_method: paymentMethod,
         recieve: paymentMethod === "qrscan" ? totalPayment : recieve ?? 0,
         return: paymentMethod === "qrscan" ? 0 : recieve - totalPayment,
@@ -77,6 +86,8 @@ function Payment() {
 
         receiptModal.onOpen(order.data.id);
         paymentModal.onClose();
+
+        updateOrder([]);
       } catch (error: any) {
         toast({
           title: "Error",
@@ -178,6 +189,7 @@ function Payment() {
           onClick={() => {
             handlePayment();
           }}
+          disabled={paymentMethod ? false : true}
         >
           <CircleDollarSign className="h-4 w-4 mr-2" />
           Confirm Payment

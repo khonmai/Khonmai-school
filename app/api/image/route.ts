@@ -5,15 +5,35 @@ import fs, { writeFile, rm } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import mime from "mime";
+import prismadb from "@/lib/prismadb";
 
+// const pathPublic = "D:/Khonmai";
 const pathPublic = "/public";
 const pathProfile = "/images/profiles";
 
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
+export async function GET(req: NextRequest) {
+  try {
+    const id = req.nextUrl.searchParams.get("id") ?? undefined;
+
+    const image = await prismadb?.image.findUnique({
+      where: { id: id },
+    });
+    console.log(id);
+
+    const filePath = join(
+      pathPublic,
+      image?.imageFullUrl!,
+      "/",
+      image?.filename!
+    );
+    const file = await fs.readFile(filePath);
+
+    return NextResponse.json(file);
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ error }, { status: 500 });
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,7 +52,7 @@ export async function POST(req: NextRequest) {
     const uploadDir = join(process.cwd(), relativeUploadDir);
     await writeFile(`${uploadDir}/${filename}`, buffer);
 
-    const image = await prisma?.image.create({
+    const image = await prismadb?.image.create({
       data: {
         filename: filename,
         imageFullUrl: join(pathProfile, "/"),
@@ -50,12 +70,12 @@ export async function DELETE(req: NextRequest) {
   try {
     const id = req.nextUrl.searchParams.get("id") ?? "";
 
-    const image = await prisma?.image.findUnique({
+    const image = await prismadb?.image.findUnique({
       where: { id: id },
     });
 
     if (image) {
-      await prisma?.image.deleteMany({
+      await prismadb?.image.deleteMany({
         where: { id: id },
       });
 
@@ -78,9 +98,10 @@ export async function DELETE(req: NextRequest) {
 
       await rm(filePath);
     }
-    
+
     return NextResponse.json({ image });
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
   }
 }
+

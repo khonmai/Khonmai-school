@@ -6,13 +6,13 @@ interface PaidStatusProps {
 export const PaidStatus = ({ status, paydate }: PaidStatusProps) => {
   if (status) {
     return (
-      <div className="bg-tidal-600 rounded-xl text-center text-sea-green-50 font-semibold p-1">
+      <div className="bg-tidal-600 rounded-xl text-center text-sea-green-50 font-semibold p-1 text-xs">
         Paid
       </div>
     );
   } else {
     return (
-      <div className="bg-destructive rounded-xl text-center text-sea-green-50 font-semibold px-2 py-1">
+      <div className="bg-destructive rounded-xl text-center text-sea-green-50 font-semibold px-2 py-1 text-xs">
         Unpaid
       </div>
     );

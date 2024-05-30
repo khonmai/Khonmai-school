@@ -38,10 +38,10 @@ function StudentsPage() {
 
       <DataTable columns={columns} data={formatedStudent} />
 
-      <div className="flex flex-1">
+      <div className="flex gap-4 flex-wrap mb-4">
         {students &&
           students.map((item: any) => {
-            return <CardStudent key={item?.id} data={item} />;
+            return <CardStudent key={item?.id} data={item} isEdit />;
           })}
       </div>
     </div>

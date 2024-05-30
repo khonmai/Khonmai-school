@@ -16,17 +16,18 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Merge, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Product } from "@prisma/client";
 import { ProductSchema } from "./form-schema";
 import useProducts from "@/hooks/useProducts";
 import useFormProductModal from "@/hooks/modals/useFormProductModal";
 import useCategory from "@/hooks/useCategory";
+import { Textarea } from "@/components/ui/textarea";
 
 interface FormProductProps {
   // initialData: Students | null;
-  initialData: Product;
+  initialData: Merge<Product, { amount: number }>;
 }
 
 function FormProduct({ initialData }: FormProductProps) {
@@ -38,7 +39,7 @@ function FormProduct({ initialData }: FormProductProps) {
 
   const { mutate: productMutate } = useProducts();
 
-  const form = useForm<Product>({
+  const form = useForm<Merge<Product, { amount: number }>>({
     resolver: zodResolver(ProductSchema),
     defaultValues: initialData || {
       price: 0,
@@ -64,9 +65,7 @@ function FormProduct({ initialData }: FormProductProps) {
     setSelectedCategory(val);
   };
 
-  const onSubmit = async (data: Product) => {
-    console.log("product");
-
+  const onSubmit = async (data: Merge<Product, { amount: number }>) => {
     setIsLoading(true);
 
     let body = {
@@ -76,8 +75,9 @@ function FormProduct({ initialData }: FormProductProps) {
       category_id: selectedCategory,
       detail: data.detail,
       unit: data.unit,
+      amount: isEdit ? undefined : data.amount,
     };
-    console.log(body);
+
     if (isEdit) {
       update(body, initialData?.id!);
     } else {
@@ -218,18 +218,39 @@ function FormProduct({ initialData }: FormProductProps) {
             />
             <FormField
               control={form.control}
-              name="detail"
+              name="amount"
               render={({ field }) => (
                 <FormItem className="min-w-[250px]">
-                  <FormLabel>รายละเอียด</FormLabel>
+                  <FormLabel>จำนวน</FormLabel>
                   <FormControl>
-                    <Input {...field} value={field.value!} />
+                    <Input
+                      {...field}
+                      value={field.value ?? 0}
+                      type="number"
+                      readOnly={isEdit}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
+            <FormField
+              control={form.control}
+              name="detail"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>รายละเอียด</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      value={field.value!}
+                      className="resize-none"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button className="w-full" disabled={isLoading} variant={"primary"}>
               บันทึก
             </Button>

@@ -10,6 +10,7 @@ import { FormProductModal } from "../modals/form-product-modal";
 import { FormCategoryModal } from "../modals/form-category-modal";
 import { PaymentModal } from "../modals/payment-modal";
 import { ReceiptModal } from "../modals/receipt-modal";
+import { StockModal } from "../modals/stock-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -33,6 +34,7 @@ export const ModalProvider = () => {
       <FormCategoryModal />
       <PaymentModal />
       <ReceiptModal />
+      <StockModal />
     </>
   );
 };

@@ -175,9 +175,9 @@ function FormStudent({ initialData }: FormStudentProps) {
       await handleRemoveImage(initialData?.image_id!);
     }
 
-    console.log("imageFile", imageFile);
-    console.log("image_id", image_id);
-    console.log("initialData", initialData?.image_id!);
+    // console.log("imageFile", imageFile);
+    // console.log("image_id", image_id);
+    // console.log("initialData", initialData?.image_id!);
 
     let body = {
       student_no: data.student_no,
