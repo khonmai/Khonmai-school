@@ -15,16 +15,17 @@ function StockPage() {
   const formModal = useStockModal();
 
   const { data: stock = [], isLoading } = useStock();
+  console.log(stock[0]?.Product);
 
-  const formatedStudent: Stock[] = stock.map((item: any) => ({
+  const formatedStudent: Stock[] = stock[0]?.Product.map((item: any) => ({
     id: item.id,
-    product_no: item.Product[0]?.product_no,
-    name: item.Product[0]?.name,
-    amount: item.Product[0]?.stock[0]?.amount,
-    price: item.Product[0]?.price,
-    unit: item.Product[0]?.unit,
-    updatedAt: item?.Product[0]?.stock[0].updatedAt
-      ? format(item?.Product[0]?.stock[0].updatedAt, "dd MMMM yyyy HH:mm:ss")
+    product_no: item.product_no,
+    name: item.name,
+    amount: item.stock[0]?.amount,
+    price: item.price,
+    unit: item.unit,
+    updatedAt: item?.stock[0]?.updatedAt
+      ? format(item?.stock[0]?.updatedAt, "dd MMMM yyyy HH:mm:ss")
       : "",
   }));
 

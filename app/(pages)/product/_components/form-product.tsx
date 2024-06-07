@@ -26,9 +26,11 @@ import useCategory from "@/hooks/useCategory";
 import { Textarea } from "@/components/ui/textarea";
 import useIsLoading from "@/hooks/modals/useIsLoading";
 
+type ProductAmount = Merge<Product, { amount: number }>;
+
 interface FormProductProps {
   // initialData: Students | null;
-  initialData: Merge<Product, { amount: number }>;
+  initialData: ProductAmount;
 }
 
 function FormProduct({ initialData }: FormProductProps) {
@@ -41,10 +43,11 @@ function FormProduct({ initialData }: FormProductProps) {
 
   const { mutate: productMutate } = useProducts();
 
-  const form = useForm<Merge<Product, { amount: number }>>({
+  const form = useForm<ProductAmount>({
     resolver: zodResolver(ProductSchema),
     defaultValues: initialData || {
       price: 0,
+      amount: 0,
     },
   });
 
@@ -67,7 +70,15 @@ function FormProduct({ initialData }: FormProductProps) {
     setSelectedCategory(val);
   };
 
-  const onSubmit = async (data: Merge<Product, { amount: number }>) => {
+  const onSubmit = async (data: ProductAmount) => {
+    if (!selectedCategory) {
+      toast({
+        title: "Select Category",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     pageLoading.onLoading();
 
@@ -159,7 +170,6 @@ function FormProduct({ initialData }: FormProductProps) {
                 );
               }}
             />
-
             <FormField
               control={form.control}
               name="name"
@@ -215,6 +225,7 @@ function FormProduct({ initialData }: FormProductProps) {
                       label="Category"
                       onSelected={handleOnSelectedCategory}
                       data_value={selectedCategory}
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -230,8 +241,8 @@ function FormProduct({ initialData }: FormProductProps) {
                   <FormControl>
                     <Input
                       {...field}
-                      value={field.value ?? 0}
                       type="number"
+                      value={field.value}
                       readOnly={isEdit}
                     />
                   </FormControl>

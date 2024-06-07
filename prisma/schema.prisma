@@ -128,7 +128,7 @@ model Image {
 
 model Product {
   id         String  @id @default(cuid())
-  product_no String
+  product_no String  @unique
   name       String
   detail     String?
   price      Decimal

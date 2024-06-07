@@ -19,6 +19,7 @@ import useTeachers from "@/hooks/useTeachers";
 import { Product } from "./columns";
 import useFormProductModal from "@/hooks/modals/useFormProductModal";
 import useIsLoading from "@/hooks/modals/useIsLoading";
+import useProducts from "@/hooks/useProducts";
 // import { AlertModal } from "@/components/modals/alert-modal";
 
 interface CellActionProps {
@@ -31,7 +32,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const formModal = useFormProductModal();
   const pageLoading = useIsLoading();
 
-  const { mutate: teacherMutate } = useTeachers();
+  const { mutate: productMutate } = useProducts();
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -41,7 +42,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       setLoading(true);
       pageLoading.onLoading()
       await axios.delete(`/api/product/?id=${data.id}`);
-      teacherMutate();
+      productMutate();
       toast({
         title: "Deleted success",
         variant: "success",

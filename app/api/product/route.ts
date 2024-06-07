@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(products);
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error }, { status: 500 });
   }
 }
@@ -35,14 +36,18 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+
+    const productData = { ...body };
+    delete productData.amount;
+
     const product = await prismadb.product.create({
-      data: body,
+      data: productData,
     });
 
     const stock = await prismadb.stock.create({
       data: {
         product_id: product.id,
-        amount: body.amount,
+        amount: parseFloat(body.amount ?? "0"),
       },
     });
 
