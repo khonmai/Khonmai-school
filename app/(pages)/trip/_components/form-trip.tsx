@@ -26,6 +26,7 @@ import { TripSchema } from "./form-schema";
 import useTrip from "@/hooks/useTrip";
 import { Trip } from "@prisma/client";
 import useFormTripModal from "@/hooks/modals/useFormTripModal";
+import useIsLoading from "@/hooks/modals/useIsLoading";
 
 interface FormTripProps {
   // initialData: Students | null;
@@ -35,6 +36,7 @@ interface FormTripProps {
 function FormTrip({ initialData }: FormTripProps) {
   const formModal = useFormTripModal();
   const [isLoading, setIsLoading] = useState(false);
+  const pageLoading = useIsLoading();
 
   const { mutate: tripMutate } = useTrip();
 
@@ -51,9 +53,9 @@ function FormTrip({ initialData }: FormTripProps) {
     }
   }, [initialData]);
 
-
   const onSubmit = async (data: Trip) => {
     setIsLoading(true);
+    pageLoading.onLoading();
 
     let body = {
       name: data.name,
@@ -80,10 +82,11 @@ function FormTrip({ initialData }: FormTripProps) {
       toast({
         title: "Error",
         variant: "destructive",
-        description: `Error : ${error.message}`,
+        description: `Error : ${error.response.data}`,
       });
     } finally {
       setIsLoading(false);
+      pageLoading.onLoaded();
     }
   };
 
@@ -100,10 +103,11 @@ function FormTrip({ initialData }: FormTripProps) {
       toast({
         title: "Updated error",
         variant: "destructive",
-        description: `Error : ${error.message}`,
+        description: `Error : ${error.response.data}`,
       });
     } finally {
       setIsLoading(false);
+      pageLoading.onLoaded();
     }
   };
 

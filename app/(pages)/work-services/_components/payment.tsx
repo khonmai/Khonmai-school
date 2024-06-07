@@ -39,7 +39,7 @@ function Payment() {
         }, 0)
       );
     }
-  }, []);
+  }, [order]);
 
   const generateQR = (amount = 0) => {
     // @ts-check
@@ -92,7 +92,7 @@ function Payment() {
         toast({
           title: "Error",
           variant: "destructive",
-          description: `Error : ${error.message}`,
+          description: `Error : ${error.response.data}`,
         });
       }
     }
@@ -126,20 +126,17 @@ function Payment() {
             aria-label="Toggle a"
             className="h-24 "
           >
-            <img
-              src="images/PromptPay.png"
-              className="h-20 w-20 object-contain"
-            />
+            <img src="/PromptPay.png" className="h-20 w-20 object-contain" />
           </ToggleGroupItem>
           <ToggleGroupItem value="cash" aria-label="Toggle b" className="h-24">
-            <img src="images/cash.jpg" className="h-20 w-20 object-contain" />
+            <img src="/cash.jpg" className="h-20 w-20 object-contain" />
           </ToggleGroupItem>
           <ToggleGroupItem
             value="unpaid"
             aria-label="Toggle c"
             className="h-24"
           >
-            <img src="images/unpaid.jpg" className="h-20 w-20 object-contain" />
+            <img src="/unpaid.jpg" className="h-20 w-20 object-contain" />
           </ToggleGroupItem>
         </ToggleGroup>
       </div>

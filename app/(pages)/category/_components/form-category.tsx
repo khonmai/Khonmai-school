@@ -26,6 +26,7 @@ import { CategorySchema } from "./form-schema";
 import useCategory from "@/hooks/useCategory";
 import { Category } from "@prisma/client";
 import useFormCategoryModal from "@/hooks/modals/useFormCategoryModal";
+import useIsLoading from "@/hooks/modals/useIsLoading";
 
 interface FormCategoryProps {
   // initialData: Students | null;
@@ -35,6 +36,7 @@ interface FormCategoryProps {
 function FormCategory({ initialData }: FormCategoryProps) {
   const formModal = useFormCategoryModal();
   const [isLoading, setIsLoading] = useState(false);
+  const pageLoading = useIsLoading();
 
   const { mutate: categoryMutate } = useCategory();
 
@@ -53,6 +55,7 @@ function FormCategory({ initialData }: FormCategoryProps) {
 
   const onSubmit = async (data: Category) => {
     setIsLoading(true);
+    pageLoading.onLoading();
 
     let body = {
       name: data.name,
@@ -79,10 +82,11 @@ function FormCategory({ initialData }: FormCategoryProps) {
       toast({
         title: "Error",
         variant: "destructive",
-        description: `Error : ${error.message}`,
+        description: `Error : ${error.response.data}`,
       });
     } finally {
       setIsLoading(false);
+      pageLoading.onLoaded();
     }
   };
 
@@ -99,10 +103,11 @@ function FormCategory({ initialData }: FormCategoryProps) {
       toast({
         title: "Updated error",
         variant: "destructive",
-        description: `Error : ${error.message}`,
+        description: `Error : ${error.response.data}`,
       });
     } finally {
       setIsLoading(false);
+      pageLoading.onLoaded();
     }
   };
 

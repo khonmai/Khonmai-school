@@ -20,6 +20,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Teacher } from "./columns";
 import useFormTeacherModal from "@/hooks/modals/useFormTeacherModal";
 import useTeachers from "@/hooks/useTeachers";
+import useIsLoading from "@/hooks/modals/useIsLoading";
 // import { AlertModal } from "@/components/modals/alert-modal";
 
 interface CellActionProps {
@@ -30,6 +31,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const params = useParams();
   const formModal = useFormTeacherModal();
+  const pageLoading = useIsLoading();
 
   const { mutate: teacherMutate } = useTeachers();
 
@@ -39,6 +41,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
+      pageLoading.onLoading();
       await axios.delete(`/api/teacher/?id=${data.id}`);
       teacherMutate();
       toast({
@@ -54,6 +57,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     } finally {
       setLoading(false);
       setOpen(false);
+      pageLoading.onLoaded();
     }
   };
 

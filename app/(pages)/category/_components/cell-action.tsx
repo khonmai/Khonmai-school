@@ -16,8 +16,9 @@ import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { toast } from "@/components/ui/use-toast";
-import useTrip from "@/hooks/useTrip";
-import useFormTripModal from "@/hooks/modals/useFormTripModal";
+import useIsLoading from "@/hooks/modals/useIsLoading";
+import useCategory from "@/hooks/useCategory";
+import useFormCategoryModal from "@/hooks/modals/useFormCategoryModal";
 // import { AlertModal } from "@/components/modals/alert-modal";
 
 interface CellActionProps {
@@ -27,16 +28,19 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const params = useParams();
-  const formModal = useFormTripModal();
+  const formModal = useFormCategoryModal();
+  const pageLoading = useIsLoading();
 
-  const { mutate: categoryMutate } = useTrip();
+  const { mutate: categoryMutate } = useCategory();
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const onDelete = async () => {
     try {
+      pageLoading.onLoading();
       setLoading(true);
+
       await axios.delete(`/api/category/?id=${data.id}`);
       categoryMutate();
       toast({
@@ -52,6 +56,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     } finally {
       setLoading(false);
       setOpen(false);
+
+      pageLoading.onLoaded();
     }
   };
 

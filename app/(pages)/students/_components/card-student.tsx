@@ -19,6 +19,7 @@ import useFormStudentModal from "@/hooks/modals/useFormStudentModal";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { Edit } from "lucide-react";
+import { config } from "@/app/(config)/config";
 
 type studentClassroom = Merge<Students, { classroom: ClassRoom }>;
 
@@ -28,14 +29,14 @@ interface CardStudentProps {
 }
 
 function CardStudent({ data, isEdit = false }: CardStudentProps) {
-  const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<string>("");
   const formModal = useFormStudentModal();
 
   useEffect(() => {
-    setSelectedFile("/images/placeholder.png");
+    setSelectedFile("/placeholder.png");
     const image = data?.image;
     if (image) {
-      setSelectedFile(image.imageFullUrl + image.filename);
+      setSelectedFile(config.serverImage + image.imageFullUrl + image.filename);
     }
   }, []);
 
@@ -58,11 +59,22 @@ function CardStudent({ data, isEdit = false }: CardStudentProps) {
           </CardHeader>
           <CardContent>
             <div className="flex justify-center mt-[-16px]">
-              <img
+              <Image
+                alt="image"
+                src={selectedFile}
+                width={250}
+                height={150}
+                unoptimized={true}
+                onError={() => {
+                  setSelectedFile("/placeholder.png");
+                }}
+                className="h-[150px] w-[250px] object-cover rounded-xl p-1 "
+              />
+              {/* <img
                 src={selectedFile!}
                 alt="Preview"
                 className="h-[150px] w-[250px] object-cover rounded-xl p-1 "
-              />
+              /> */}
             </div>
 
             <div className="grid items-start pt-4 ">
@@ -89,10 +101,16 @@ function CardStudent({ data, isEdit = false }: CardStudentProps) {
         </Card>
       ) : (
         <div className="max-w-[250px] mx-auto flex flex-row gap-x-2 items-center">
-          <img
-            src={selectedFile!}
-            alt="Preview"
-            className="h-[75px] w-[75px] object-contain rounded-xl p-1 border"
+          <Image
+            alt="image"
+            src={selectedFile}
+            width={75}
+            height={75}
+            unoptimized={true}
+            onError={() => {
+              setSelectedFile("/placeholder.png");
+            }}
+            className="h-[75px] w-[75px] object-cover rounded-xl p-1 "
           />
           <div className="w-[180px]">
             <p className="truncate">

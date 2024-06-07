@@ -11,6 +11,7 @@ import { FormCategoryModal } from "../modals/form-category-modal";
 import { PaymentModal } from "../modals/payment-modal";
 import { ReceiptModal } from "../modals/receipt-modal";
 import { StockModal } from "../modals/stock-modal";
+import { FormChangePasswordModal } from "../modals/form-change-password-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -35,6 +36,7 @@ export const ModalProvider = () => {
       <PaymentModal />
       <ReceiptModal />
       <StockModal />
+      <FormChangePasswordModal />
     </>
   );
 };

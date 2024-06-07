@@ -18,7 +18,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
       const changed_order = {
         ...change_order,
-        amount: (change_order?.amount ?? 0) - 1,
+        amount: 0,
       };
 
       if (changed_order.amount == 0) {
@@ -40,7 +40,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       size={"iconsm"}
       className="hover:bg-destructive/70 hover:text-sea-green-50 hover:font-bold"
     >
-      <Minus className="w-4 h-4" />
+      <X className="w-4 h-4" />
     </Button>
   );
 };

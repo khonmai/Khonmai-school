@@ -24,6 +24,7 @@ import useProducts from "@/hooks/useProducts";
 import useFormProductModal from "@/hooks/modals/useFormProductModal";
 import useCategory from "@/hooks/useCategory";
 import { Textarea } from "@/components/ui/textarea";
+import useIsLoading from "@/hooks/modals/useIsLoading";
 
 interface FormProductProps {
   // initialData: Students | null;
@@ -33,6 +34,7 @@ interface FormProductProps {
 function FormProduct({ initialData }: FormProductProps) {
   const formModal = useFormProductModal();
   const [isLoading, setIsLoading] = useState(false);
+  const pageLoading = useIsLoading();
 
   const [isEdit, setIsEdit] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -67,6 +69,7 @@ function FormProduct({ initialData }: FormProductProps) {
 
   const onSubmit = async (data: Merge<Product, { amount: number }>) => {
     setIsLoading(true);
+    pageLoading.onLoading();
 
     let body = {
       product_no: data.product_no,
@@ -99,10 +102,11 @@ function FormProduct({ initialData }: FormProductProps) {
       toast({
         title: "Error",
         variant: "destructive",
-        description: `Error : ${error.message}`,
+        description: `Error : ${error.response.data}`,
       });
     } finally {
       setIsLoading(false);
+      pageLoading.onLoaded();
     }
   };
 
@@ -119,10 +123,11 @@ function FormProduct({ initialData }: FormProductProps) {
       toast({
         title: "Updated error",
         variant: "destructive",
-        description: `Error : ${error.message}`,
+        description: `Error : ${error.response.data}`,
       });
     } finally {
       setIsLoading(false);
+      pageLoading.onLoaded();
     }
   };
 

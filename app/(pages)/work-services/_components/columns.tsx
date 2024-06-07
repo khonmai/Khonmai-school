@@ -5,6 +5,7 @@ import SortingColumn from "@/components/ui/sortingcolumn";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { CellAction } from "./cell-action";
+import { CellEdit } from "./cell-edit";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Order = {
@@ -38,6 +39,7 @@ export const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "amount",
     header: "จำนวน",
+    cell: ({ row }) => <CellEdit data={row.original} />,
   },
   {
     accessorKey: "total",

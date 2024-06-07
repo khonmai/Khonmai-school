@@ -18,6 +18,7 @@ import { toast } from "@/components/ui/use-toast";
 import useTeachers from "@/hooks/useTeachers";
 import { Product } from "./columns";
 import useFormProductModal from "@/hooks/modals/useFormProductModal";
+import useIsLoading from "@/hooks/modals/useIsLoading";
 // import { AlertModal } from "@/components/modals/alert-modal";
 
 interface CellActionProps {
@@ -28,6 +29,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const params = useParams();
   const formModal = useFormProductModal();
+  const pageLoading = useIsLoading();
 
   const { mutate: teacherMutate } = useTeachers();
 
@@ -37,6 +39,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
+      pageLoading.onLoading()
       await axios.delete(`/api/product/?id=${data.id}`);
       teacherMutate();
       toast({
@@ -52,6 +55,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     } finally {
       setLoading(false);
       setOpen(false);
+      pageLoading.onLoaded()
     }
   };
 

@@ -35,6 +35,8 @@ import { OrderHistory } from "./_components/order_history";
 import Product from "./_components/product";
 import { useMediaQuery } from "usehooks-ts";
 import { Label } from "@/components/ui/label";
+import axios from "axios";
+import { toast } from "@/components/ui/use-toast";
 
 function WorkServicesPage() {
   const { order, updateOrder } = useOrderStore();
@@ -49,9 +51,6 @@ function WorkServicesPage() {
   const [selectedProduct, setSelectedProduct] = useState("");
   const [formatedOrderData, setFormatedOrderData] = useState<Order[]>([]);
 
-  const [qrcodesvg, setQrcodesvg] = useState("");
-  const [qrcodeurl, setQrcodeurl] = useState("");
-
   useEffect(() => {
     const formatedData: Order[] = order?.map((item: any) => ({
       id: item.id,
@@ -64,7 +63,6 @@ function WorkServicesPage() {
       total: item.amount * item.price,
     }));
     setFormatedOrderData(formatedData);
-    console.log(formatedOrderData)
   }, [order, student]);
 
   const { data: product = [] } = useProducts();
@@ -114,6 +112,26 @@ function WorkServicesPage() {
         updateOrder(data);
       }
       setSelectedProduct("");
+    }
+  };
+
+  const handelPayment = async () => {
+    if (order) {
+      let body = {
+        order: order,
+      };
+
+      try {
+        await axios.patch("/api/order", body);
+
+        paymentModal.onOpen();
+      } catch (error: any) {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: `Error : ${error.response.data}`,
+        });
+      }
     }
   };
 
@@ -215,7 +233,7 @@ function WorkServicesPage() {
                   </Button>
                   <Button
                     disabled={order.length <= 0}
-                    onClick={() => paymentModal.onOpen()}
+                    onClick={handelPayment}
                     variant={"primary"}
                     className="w-full"
                   >

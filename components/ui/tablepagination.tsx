@@ -45,7 +45,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className={cn(
-              "h-8 w-8 p-0 lg:flex",
+              "h-8 w-8 p-0 ",
               !table.getCanPreviousPage() ? "hidden" : ""
             )}
             onClick={() => table.previousPage()}

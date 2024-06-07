@@ -9,6 +9,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { Stock, columns } from "./_components/columns";
 import { format } from "date-fns";
 import useStockModal from "@/hooks/modals/useStockModal";
+import LoadingPage from "@/components/loading";
 
 function StockPage() {
   const formModal = useStockModal();
@@ -28,19 +29,22 @@ function StockPage() {
   }));
 
   return (
-    <div className="w-full px-2 m-auto ">
-      <div className="flex items-center justify-between pb-4">
-        <Heading title={`Stock`} description="Stock" />
-        <Button
-          variant={"primary"}
-          size={"icon"}
-          onClick={() => formModal.onOpen()}
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
+    <>
+      {isLoading && <LoadingPage isLoading={isLoading} />}{" "}
+      <div className="w-full px-2 m-auto ">
+        <div className="flex items-center justify-between pb-4">
+          <Heading title={`Stock`} description="Stock" />
+          <Button
+            variant={"primary"}
+            size={"icon"}
+            onClick={() => formModal.onOpen()}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+        <DataTable columns={columns} data={formatedStudent} />
       </div>
-      <DataTable columns={columns} data={formatedStudent} />
-    </div>
+    </>
   );
 }
 

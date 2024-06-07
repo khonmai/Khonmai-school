@@ -7,13 +7,14 @@ import { X } from "lucide-react";
 import axios from "axios";
 import { join } from "path";
 import Image from "next/image";
+import { config } from "@/app/(config)/config";
 
 interface InputFileProps {
   onSelected: (date: File) => void;
   image: any;
 }
 
-const pathProfile = "/images/profiles";
+const pathProfile = "/profiles";
 
 export default function ImageUpload({ onSelected, image }: InputFileProps) {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
@@ -22,7 +23,9 @@ export default function ImageUpload({ onSelected, image }: InputFileProps) {
   useEffect(() => {
     if (image) {
       setTimeout(() => {
-        setSelectedFile(image.imageFullUrl + image.filename);
+        setSelectedFile(
+          config.serverImage + image.imageFullUrl + image.filename
+        );
       }, 0);
     }
   }, []);
@@ -69,9 +72,20 @@ export default function ImageUpload({ onSelected, image }: InputFileProps) {
     <div className="grid max-w-sm items-center gap-1.5 ">
       {selectedFile ? (
         <div className="mt-2 relative group/image flex justify-center ">
-          <img
+          {/* <img
             src={selectedFile}
             alt="Preview"
+            className="h-[160px] w-[160px] object-contain rounded-xl"
+          /> */}
+          <Image
+            alt="image"
+            src={selectedFile}
+            width={160}
+            height={160}
+            unoptimized={true}
+            onError={() => {
+              setSelectedFile("/placeholder.png");
+            }}
             className="h-[160px] w-[160px] object-contain rounded-xl"
           />
           <X
@@ -90,10 +104,18 @@ export default function ImageUpload({ onSelected, image }: InputFileProps) {
       ) : (
         <div className="mt-2 relative group/image">
           <Label htmlFor="picture" className=" cursor-pointer">
-            <img
+            {/* <img
               className="h-[160px] w-[160px] object-contain rounded-xl"
-              src={"/images/placeholder.png"}
+              src={"/placeholder.png"}
               alt="Preview"
+            /> */}
+            <Image
+              alt="image"
+              src="/placeholder.png"
+              width={160}
+              height={160}
+              unoptimized={true}
+              className="h-[160px] w-[160px] object-contain rounded-xl"
             />
           </Label>
           <Input

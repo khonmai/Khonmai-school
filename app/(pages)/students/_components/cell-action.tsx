@@ -18,6 +18,7 @@ import useFormModal from "@/hooks/modals/useFormStudentModal";
 import { AlertModal } from "@/components/modals/alert-modal";
 import useStudents from "@/hooks/useStudents";
 import { toast } from "@/components/ui/use-toast";
+import useIsLoading from "@/hooks/modals/useIsLoading";
 // import { AlertModal } from "@/components/modals/alert-modal";
 
 interface CellActionProps {
@@ -28,6 +29,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const params = useParams();
   const formModal = useFormModal();
+  const pageLoading = useIsLoading();
 
   const { mutate: studentMutate } = useStudents();
 
@@ -37,6 +39,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
+      pageLoading.onLoading();
       await axios.delete(`/api/student/?id=${data.id}`);
       studentMutate();
       toast({
@@ -52,6 +55,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     } finally {
       setLoading(false);
       setOpen(false);
+      pageLoading.onLoaded();
     }
   };
 

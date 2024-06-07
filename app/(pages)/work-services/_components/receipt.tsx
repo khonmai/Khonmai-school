@@ -127,7 +127,7 @@ export function Receipt({ schoolData, orderData }: ReceiptProps) {
               <View>
                 <Image
                   style={styles.image_logo}
-                  src="/images/schools/logo01.png"
+                  src="logo01.png"
                 />
               </View>
               <View>

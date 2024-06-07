@@ -39,7 +39,7 @@ export const ReceiptModal = () => {
       toast({
         title: "Error",
         variant: "destructive",
-        description: `Error : ${error.message}`,
+        description: `Error : ${error.response.data}`,
       });
     }
   };

@@ -9,12 +9,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useFormChangePasswordModal from "@/hooks/modals/useFormChangePassword";
 import { ChevronsLeftRight } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 export const UserItem = () => {
   const { data: session } = useSession();
+  const formChangePassword = useFormChangePasswordModal();
 
   return (
     <DropdownMenu>
@@ -35,12 +37,12 @@ export const UserItem = () => {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-80"
+        className="w-60"
         align="start"
         alignOffset={11}
         forceMount
       >
-        <div className="flex flex-col space-y-4 p-2">
+        <div className="flex flex-col p-2">
           <p className="text-xs font-medium leading-none text-muted-foreground">
             {session?.user?.email}
           </p>
@@ -55,11 +57,15 @@ export const UserItem = () => {
             </div>
           </div>
         </div>
-        <DropdownMenuSeparator />
         <DropdownMenuItem
           asChild
-          className="w-full cursor-pointer text-muted-foreground"
-        ></DropdownMenuItem>
+          className="w-full cursor-pointer text-muted-foreground "
+          onClick={() => {
+            formChangePassword.onOpen();
+          }}
+        >
+          <p className="pl-4">Change Password</p>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

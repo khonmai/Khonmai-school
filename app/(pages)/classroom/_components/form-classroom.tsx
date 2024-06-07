@@ -29,6 +29,7 @@ import { ClassRoomSchema } from "./form-schema";
 import { ClassRoom } from "@prisma/client";
 import useTeachers from "@/hooks/useTeachers";
 import useFormClassRoomModal from "@/hooks/modals/useFormClassRoomModal";
+import useIsLoading from "@/hooks/modals/useIsLoading";
 
 interface FormClassRoomProps {
   // initialData: Students | null;
@@ -39,6 +40,7 @@ function FormClassRoom({ initialData }: FormClassRoomProps) {
   const formModal = useFormClassRoomModal();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState("");
+  const pageLoading = useIsLoading();
 
   const { mutate: classRoomMutate } = useClassRoom();
 
@@ -70,6 +72,7 @@ function FormClassRoom({ initialData }: FormClassRoomProps) {
 
   const onSubmit = async (data: ClassRoom) => {
     setIsLoading(true);
+    pageLoading.onLoading();
 
     let body = {
       name: data.name,
@@ -97,10 +100,11 @@ function FormClassRoom({ initialData }: FormClassRoomProps) {
       toast({
         title: "Error",
         variant: "destructive",
-        description: `Error : ${error.message}`,
+        description: `Error : ${error.response.data}`,
       });
     } finally {
       setIsLoading(false);
+      pageLoading.onLoaded();
     }
   };
 
@@ -117,10 +121,11 @@ function FormClassRoom({ initialData }: FormClassRoomProps) {
       toast({
         title: "Updated error",
         variant: "destructive",
-        description: `Error : ${error.message}`,
+        description: `Error : ${error.response.data}`,
       });
     } finally {
       setIsLoading(false);
+      pageLoading.onLoaded();
     }
   };
 

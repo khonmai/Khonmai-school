@@ -8,6 +8,7 @@ import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
 import useFormClassRoomModal from "@/hooks/modals/useFormClassRoomModal";
 import useClassRoom from "@/hooks/useClassRoom";
+import LoadingPage from "@/components/loading";
 
 function ClassRoomPage() {
   const formModal = useFormClassRoomModal();
@@ -25,20 +26,23 @@ function ClassRoomPage() {
   }));
 
   return (
-    <div className="w-full px-2 m-auto ">
-      <div className="flex items-center justify-between pb-4">
-        <Heading title={`Class Room`} description="Manage Class Room data" />
-        <Button
-          variant={"primary"}
-          size={"icon"}
-          onClick={() => formModal.onOpen()}
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
-      </div>
+    <>
+      {isLoading && <LoadingPage isLoading={isLoading} />}{" "}
+      <div className="w-full px-2 m-auto ">
+        <div className="flex items-center justify-between pb-4">
+          <Heading title={`Class Room`} description="Manage Class Room data" />
+          <Button
+            variant={"primary"}
+            size={"icon"}
+            onClick={() => formModal.onOpen()}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
 
-      <DataTable columns={columns} data={formatedClassrooms || []} />
-    </div>
+        <DataTable columns={columns} data={formatedClassrooms || []} />
+      </div>
+    </>
   );
 }
 

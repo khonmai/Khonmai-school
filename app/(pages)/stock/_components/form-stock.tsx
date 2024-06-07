@@ -29,11 +29,13 @@ import useStockModal from "@/hooks/modals/useStockModal";
 import { Combobox } from "@/components/ui/combobox";
 import useProducts from "@/hooks/useProducts";
 import useStock from "@/hooks/useStock";
+import useIsLoading from "@/hooks/modals/useIsLoading";
 
 function FormStock() {
   const formModal = useStockModal();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState("");
+  const pageLoading = useIsLoading();
 
   const { mutate: stockMutate } = useStock();
 
@@ -54,7 +56,7 @@ function FormStock() {
   };
 
   const onSubmit = async (data: Stock) => {
-    console.log(selectedProduct, data.amount);
+    pageLoading.onLoading();
     const body = {
       product_id: selectedProduct,
       amount: data.amount,
@@ -73,10 +75,11 @@ function FormStock() {
       toast({
         title: "Error",
         variant: "destructive",
-        description: `Error : ${error.message}`,
+        description: `Error : ${error.response.data}`,
       });
     } finally {
       setIsLoading(false);
+      pageLoading.onLoaded();
     }
 
     formModal.onClose();

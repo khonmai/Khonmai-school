@@ -74,9 +74,12 @@ export async function POST(req: NextRequest) {
       );
 
       if (over_stock.filter((f) => f != null).length > 0) {
-        return NextResponse.json(`${over_stock[0]?.name} over stock`, {
-          status: 500,
-        });
+        return NextResponse.json(
+          `${over_stock.filter((f) => f != null)[0].name ?? ""} over stock`,
+          {
+            status: 500,
+          }
+        );
       }
 
       const order_number = await prismadb.order.findFirst({
@@ -144,14 +147,50 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const id = req.nextUrl.searchParams.get("id") ?? "";
-
     const body = await req.json();
-    const student = await prismadb.students.update({
-      where: { id: id },
-      data: body,
-    });
-    return NextResponse.json(student);
+    if (body) {
+      const over_stock = await Promise.all(
+        body.order.map(async (item: any) => {
+          const check_stock = await prismadb.category.findFirst({
+            where: { name: "สินค้า" },
+            include: {
+              Product: {
+                include: {
+                  stock: {
+                    where: {
+                      AND: [
+                        { product_id: item.product.id },
+                        { amount: { lt: item.amount } },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+          if (check_stock?.Product[0]?.stock?.length ?? 0 > 0) {
+            const product = await prismadb.product.findUnique({
+              where: { id: item.product.id },
+            });
+
+            return product;
+          }
+          return null;
+        })
+      );
+
+      if (over_stock.filter((f) => f != null).length > 0) {
+        return NextResponse.json(
+          `${over_stock.filter((f) => f != null)[0].name ?? ""} over stock`,
+          {
+            status: 500,
+          }
+        );
+      }
+    }
+
+    return NextResponse.json({ message: "success" });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ error }, { status: 500 });

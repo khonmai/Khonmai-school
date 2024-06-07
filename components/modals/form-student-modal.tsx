@@ -15,6 +15,7 @@ export const FormStudentModal = () => {
     <Dialog
       open={formModal.isOpen && !isLoading}
       onOpenChange={formModal.onClose}
+      
     >
       <DialogContent className="max-w-[900px] w-[80%] p-0 overflow-hidden">
         <ScrollArea className="max-h-[90vh]">

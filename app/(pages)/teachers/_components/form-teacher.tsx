@@ -17,16 +17,14 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import useFormModal from "@/hooks/modals/useFormTeacherModal";
 import axios from "axios";
-import React, {
-  useEffect,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import { Merge, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ImageUpload from "@/components/image-upload";
 import { TeacherSchema } from "./form-schema";
 import { Image as ImageType, Teacher } from "@prisma/client";
 import useTeachers from "@/hooks/useTeachers";
+import useIsLoading from "@/hooks/modals/useIsLoading";
 
 interface FormTeacherProps {
   // initialData: Students | null;
@@ -35,6 +33,8 @@ interface FormTeacherProps {
 
 function FormTeacher({ initialData }: FormTeacherProps) {
   const formModal = useFormModal();
+  const pageLoading = useIsLoading();
+  
   const [isLoading, setIsLoading] = useState(false);
   const [imageFile, setImateFile] = useState<File>();
 
@@ -55,6 +55,7 @@ function FormTeacher({ initialData }: FormTeacherProps) {
 
   const onSubmit = async (data: Teacher) => {
     setIsLoading(true);
+    pageLoading.onLoading();
 
     const image_id = await handleFileUpload(imageFile);
     if (
@@ -95,10 +96,11 @@ function FormTeacher({ initialData }: FormTeacherProps) {
       toast({
         title: "Error",
         variant: "destructive",
-        description: `Error : ${error.message}`,
+        description: `Error : ${error.response.data}`,
       });
     } finally {
       setIsLoading(false);
+      pageLoading.onLoaded();
     }
   };
 
@@ -115,10 +117,11 @@ function FormTeacher({ initialData }: FormTeacherProps) {
       toast({
         title: "Updated error",
         variant: "destructive",
-        description: `Error : ${error.message}`,
+        description: `Error : ${error.response.data}`,
       });
     } finally {
       setIsLoading(false);
+      pageLoading.onLoaded();
     }
   };
 
@@ -174,7 +177,7 @@ function FormTeacher({ initialData }: FormTeacherProps) {
                   <FormItem className="min-w-[250px]">
                     <FormLabel>รหัสครู</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} readOnly={isEdit} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

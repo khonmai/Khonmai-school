@@ -1,6 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
+// import { deleteImage } from "../image/route";
 
 export async function GET(req: NextRequest) {
   try {
@@ -78,7 +79,7 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (student.image_id) {
-      await axios.delete(`/api/image/?id=${student.image_id}`);
+      // await deleteImage(student.image_id);
     }
 
     return NextResponse.json(student);

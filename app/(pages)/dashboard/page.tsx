@@ -1,9 +1,6 @@
 "use client";
 
-import React from "react";
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import { Heading } from "@/components/heading";
 import {
   Card,
@@ -15,17 +12,19 @@ import {
 import { DollarSign } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import useIsLoading from "@/hooks/modals/useIsLoading";
 
 function DashboardPage() {
-  const router = useRouter();
+  const isLoading = useIsLoading();
 
-  const { data: session } = useSession();
+  useEffect(() => {
+    document.title = "Dashboard";
 
-  const handleLotout = () => {
-    signOut().then(() => {
-      router.push("/");
-    });
-  };
+    isLoading.onLoading();
+    setTimeout(() => {
+      isLoading.onLoaded();
+    }, 5000);
+  }, []);
 
   return (
     <div className="w-full px-2 m-auto ">

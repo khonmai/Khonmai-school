@@ -5,15 +5,16 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   try {
     const id = req.nextUrl.searchParams.get("id") ?? undefined;
+
     if (id) {
       const trips = await prismadb.trip.findUnique({
         where: { id: id },
       });
       return NextResponse.json(trips);
-    } else {
-      const trips = await prismadb.trip.findMany({});
-      return NextResponse.json(trips);
     }
+
+    const trips = await prismadb.trip.findMany({});
+    return NextResponse.json(trips);
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
   }

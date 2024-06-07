@@ -9,6 +9,7 @@ import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
 import useProducts from "@/hooks/useProducts";
 import useFormProductModal from "@/hooks/modals/useFormProductModal";
+import LoadingPage from "@/components/loading";
 
 function ProductPage() {
   const formModal = useFormProductModal();
@@ -20,24 +21,27 @@ function ProductPage() {
     name: item.name,
     price: item.price,
     unit: item.unit,
-    category : item.category?.name ?? "" 
+    category: item.category?.name ?? "",
   }));
 
   return (
-    <div className="w-full px-2 m-auto ">
-      <div className="flex items-center justify-between pb-4">
-        <Heading title={`Product`} description="Manage Product " />
-        <Button
-          variant={"primary"}
-          size={"icon"}
-          onClick={() => formModal.onOpen()}
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
-      </div>
+    <>
+      {isLoading && <LoadingPage isLoading={isLoading} />}{" "}
+      <div className="w-full px-2 m-auto ">
+        <div className="flex items-center justify-between pb-4">
+          <Heading title={`Product`} description="Manage Product " />
+          <Button
+            variant={"primary"}
+            size={"icon"}
+            onClick={() => formModal.onOpen()}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
 
-      <DataTable columns={columns} data={formatedTeacher || []} />
-    </div>
+        <DataTable columns={columns} data={formatedTeacher || []} />
+      </div>
+    </>
   );
 }
 
