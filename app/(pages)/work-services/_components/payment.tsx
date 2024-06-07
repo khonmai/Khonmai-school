@@ -126,7 +126,7 @@ function Payment() {
             aria-label="Toggle a"
             className="h-24 "
           >
-            <img src="/PromptPay.png" className="h-20 w-20 object-contain" />
+            <img src="/promptpay.png" className="h-20 w-20 object-contain" />
           </ToggleGroupItem>
           <ToggleGroupItem value="cash" aria-label="Toggle b" className="h-24">
             <img src="/cash.jpg" className="h-20 w-20 object-contain" />
