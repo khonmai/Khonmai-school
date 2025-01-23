@@ -1,6 +1,7 @@
 "use client";
 
 import useIsLoading from "@/hooks/modals/useIsLoading";
+import { useEffect } from "react";
 import { ThreeCircles } from "react-loader-spinner";
 
 interface LoadingPageProps {

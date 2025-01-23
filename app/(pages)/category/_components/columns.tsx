@@ -13,9 +13,9 @@ export type Category = {
 export const columns: ColumnDef<Category>[] = [
   {
     accessorKey: "name",
-    header: ({ column }) => <SortingColumn column={column} title="หมวดหมู่่" />,
+    header: ({ column }) => <SortingColumn column={column} title="หมวดหมู่" />,
     enableColumnFilter: true,
-    footer: "หมวดหมู่่",
+    footer: "หมวดหมู่",
   },
 
   { id: "action", cell: ({ row }) => <CellAction data={row.original} /> },

@@ -23,7 +23,7 @@ function DashboardPage() {
     isLoading.onLoading();
     setTimeout(() => {
       isLoading.onLoaded();
-    }, 5000);
+    }, 100);
   }, []);
 
   return (

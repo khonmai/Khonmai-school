@@ -24,6 +24,8 @@ function StudentsPage() {
     birthdate: item?.birthdate ? format(item?.birthdate, "dd MMMM yyyy") : "",
   }));
 
+  console.log(formatedStudent)
+
   return (
     <>
       {isLoading && <LoadingPage isLoading={isLoading} />}
@@ -38,15 +40,15 @@ function StudentsPage() {
             <Plus className="h-4 w-4" />
           </Button>
         </div>
-
         <DataTable columns={columns} data={formatedStudent} />
-
-        <div className="flex gap-4 flex-wrap mb-4">
-          {students &&
-            students.map((item: any) => {
-              return <CardStudent key={item?.id} data={item} isEdit />;
-            })}
-        </div>
+        {false && (
+          <div className="flex gap-4 flex-wrap mb-4">
+            {students &&
+              students.map((item: any) => {
+                return <CardStudent key={item?.id} data={item} isEdit />;
+              })}
+          </div>
+        )}
       </div>
     </>
   );

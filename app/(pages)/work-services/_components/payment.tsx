@@ -161,7 +161,7 @@ function Payment() {
               <Label>เงินทอน : </Label>
               <Input
                 readOnly
-                value={recieve - totalPayment ?? 0}
+                value={recieve - totalPayment}
                 className="text-right text-2xl pr-7"
               />
             </div>

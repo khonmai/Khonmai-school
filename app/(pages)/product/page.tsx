@@ -15,7 +15,7 @@ function ProductPage() {
   const formModal = useFormProductModal();
   const { data: products = [], isLoading } = useProducts();
 
-  const formatedTeacher: Product[] = products?.map((item: any) => ({
+  const formatedProduct: Product[] = products?.map((item: any) => ({
     id: item.id,
     product_no: item.product_no,
     name: item.name,
@@ -39,7 +39,7 @@ function ProductPage() {
           </Button>
         </div>
 
-        <DataTable columns={columns} data={formatedTeacher || []} />
+        <DataTable columns={columns} data={formatedProduct || []} />
       </div>
     </>
   );

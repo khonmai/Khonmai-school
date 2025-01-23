@@ -94,6 +94,7 @@ export function DatePicker({ onSelected, date_value }: DatePickerProps) {
                 setDateValue("");
               }
             }}
+            defaultMonth={date}
           />
         </div>
       </PopoverContent>

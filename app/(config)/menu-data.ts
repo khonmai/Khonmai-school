@@ -1,4 +1,5 @@
 import {
+  File,
   Gauge,
   GraduationCap,
   LocateFixed,
@@ -31,6 +32,16 @@ export const menuData: MenuInterType[] = [
       { label: "Trip", url: "/trip", icon: LocateFixed },
       { label: "Category", url: "/category", icon: Package },
       { label: "Product", url: "/product", icon: Package },
+    ],
+  },
+  {
+    label: "Report",
+    url: "",
+    icon: File,
+    child: [
+      { label: "Daily", url: "/reports/daily", icon: File },
+      // { label: "Monthly", url: "/reports/monthly", icon: File },
+      // { label: "Export", url: "/reports/testexcel", icon: File },
     ],
   },
 ];
